@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="io.authme.home.MainActivity"
+    android:animateLayoutChanges="true">
+
+
+    <Button
+        android:id="@+id/train"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:text="Train Yourself"
+        android:background="@color/colorPrimary"
+        android:textColor="@android:color/white"
+        android:layout_centerInParent="true"/>
+
+    <RelativeLayout
+        android:id="@+id/trustlayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/train"
+        android:layout_marginTop="30dp"
+        android:visibility="gone"
+        android:background="@color/colorPrimaryDark">
+
+        <LinearLayout
+        android:id="@+id/signaturelayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_alignParentTop="true"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/signature"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Signature:"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/signaturescore"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="textEnd"
+            android:layout_marginRight="100dp"
+            android:text=""
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/speedlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/signaturelayout">
+
+            <TextView
+                android:id="@+id/speed"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Speed:"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/speedscore"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:layout_marginRight="100dp"
+                android:text=""
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/motionlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="50dp"
+            android:orientation="horizontal"
+            android:layout_below="@+id/speedlayout">
+
+            <TextView
+                android:id="@+id/motion"
+                android:layout_gravity="left"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Movements"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/motionscore"
+                android:layout_gravity="right"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="textEnd"
+                android:layout_marginRight="100dp"
+                android:text=""
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</RelativeLayout>
