@@ -10,20 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="io.authme.home.LandingPage">
 
-    <EditText
-        android:id="@+id/emailId"
-        android:hint="Your email id?"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:textAlignment="center"/>
-
     <Button
         android:id="@+id/signup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:text="Signup/Signin"
+        android:text="Sign in"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"
         android:layout_below="@+id/emailId"/>
@@ -47,5 +39,17 @@
         android:text="Scan Reset Key from Email"
         android:background="@color/colorPrimary"
         android:textColor="@android:color/white"/>
+
+    <EditText
+        android:id="@+id/emailId"
+        android:hint="Email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:inputType="textEmailAddress"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/qrcode"
+        android:layout_toEndOf="@+id/qrcode"
+        android:layout_marginTop="150dp" />
 
 </RelativeLayout>

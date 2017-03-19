@@ -57,24 +57,19 @@ public class LandingPage extends AppCompatActivity {
         }
 
         signup = (Button) this.findViewById(R.id.signup);
-
         qrcode = (Button) this.findViewById(R.id.qrcode);
-
         editText = (EditText) this.findViewById(R.id.emailId);
-
         error = (TextView) this.findViewById(R.id.error);
-
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                email = editText.getText().toString();
+                email = editText.getText().toString().trim();
 
                 if (!Config.isValidEmail(email)) {
                     Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_LONG)
                             .show();
                     return;
-                }
-                else {
+                } else {
                     Intent intent = new Intent(LandingPage.this, AuthScreen.class);
 
                     intent.putExtra("email", email);
@@ -83,47 +78,54 @@ public class LandingPage extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case RESULT : {
+            case RESULT: {
                 switch (resultCode) {
-                    case Config.SIGNUP_PATTERN : {
+                    case Config.SIGNUP_PATTERN: {
                         initPush();
-                    } break;
+                    }
+                    break;
 
-                    case Config.LOGIN_PATTERN : {
+                    case Config.LOGIN_PATTERN: {
                         Toast.makeText(getApplicationContext(), data.getStringExtra("response"), Toast.LENGTH_LONG)
                                 .show(); //you will get a trust score in the response here.
-                    } break;
+                    }
+                    break;
 
                     case Config.RESET_PATTERN: {
-                        error.setText(R.string.error);
+                        error.setText(R.string.error_account_exists);
                         hidenSeek();
-                    } break;
+                    }
+                    break;
 
-                    case Config.RESULT_FAILED : {
+                    case Config.RESULT_FAILED: {
                         Toast.makeText(getApplicationContext(), "Failed To Identify", Toast.LENGTH_LONG)
                                 .show();
                         if (data.hasExtra("response")) {
                             Toast.makeText(getApplicationContext(), data.getStringExtra("response"), Toast.LENGTH_LONG)
                                     .show();
                         }
-                    } break;
+                    }
+                    break;
 
-                    default: break;
+                    default:
+                        break;
                 }
 
-            } break;
+            }
+            break;
 
             case MY_PERMISSIONS_REQUEST_CAMERA: {
 
-            } break;
+            }
+            break;
 
-            default: break;
+            default:
+                break;
         }
     }
 
@@ -201,6 +203,18 @@ public class LandingPage extends AppCompatActivity {
 
         }
     }
+
+    /**
+     * Error:FAILURE: Build failed with an exception.
+
+     * What went wrong:
+     Execution failed for task ':app:clean'.
+     > Unable to delete directory: /media/artpar/ddrive/workspace/code/playstoreapp/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/jars
+
+     * Try:
+     Run with --stacktrace option to get the stack trace. Run with --debug option to get more log output.
+
+     */
 
     private void scanQRcode() {
         MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()

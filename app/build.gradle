@@ -26,7 +26,10 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'io.authme:patternlock:0.1.4'
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    compile 'com.edwardvanraak:MaterialBarcodeScanner:0.0.6-ALPHA'
+    compile 'com.google.android.gms:play-services-gcm:10.0.1'
+    compile 'com.google.android.gms:play-services-vision:10.0.1'
+    compile ('com.edwardvanraak:MaterialBarcodeScanner:0.0.6-ALPHA') {
+        exclude module: 'play-services-vision';
+    }
     testCompile 'junit:junit:4.12'
 }
