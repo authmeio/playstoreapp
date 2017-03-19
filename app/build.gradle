@@ -25,6 +25,8 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.1.0'
-    compile 'io.authme:patternlock:0.1.2'
+    compile 'io.authme:patternlock:0.1.4'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
+    compile 'com.edwardvanraak:MaterialBarcodeScanner:0.0.6-ALPHA'
     testCompile 'junit:junit:4.12'
 }

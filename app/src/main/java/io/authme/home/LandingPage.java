@@ -1,14 +1,25 @@
 package io.authme.home;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScanner;
+import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerBuilder;
+import com.google.android.gms.vision.barcode.Barcode;
+
+import io.authme.home.gcm.RegistrationIntentService;
 import io.authme.sdk.AuthScreen;
 import io.authme.sdk.server.Config;
 
@@ -18,17 +29,28 @@ public class LandingPage extends AppCompatActivity {
     Config config;
     TextView error;
     String email;
+    App app;
 
-    public final static int RESULT = 1;
+    public final static int RESULT = 1, MY_PERMISSIONS_REQUEST_CAMERA = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
+        LandingPage.this.getSharedPreferences(Config.STORED_VALUES, 0).edit().clear().commit();
+
+        LandingPage.this.getSharedPreferences(App.APP_VALUES, 0).edit().clear().commit();
+
+        app = new App(getApplicationContext());
+
         config = new Config(LandingPage.this);
 
-        if (config.isValidConfig()) {
+        config.setEnvironment(Config.PRODUCTION);
+
+        config.setAPIKey("k-862b77f3-5937-4856-af1b-8950a001f733");
+
+        if (!TextUtils.isEmpty(config.getEmailId())) {
             LandingPage.this.finish();
             startMainactivity();
             return;
@@ -53,15 +75,11 @@ public class LandingPage extends AppCompatActivity {
                     return;
                 }
                 else {
-                    config.setEnvironment(Config.PRODUCTION);
-
-                    config.setAPIKey("k-862b77f3-5937-4856-af1b-8950a001f733");
-
                     Intent intent = new Intent(LandingPage.this, AuthScreen.class);
 
                     intent.putExtra("email", email);
 
-                    startActivityForResult(intent, RESULT);
+                    startActivityForResult(addOns(intent), RESULT);
                 }
             }
         });
@@ -74,8 +92,7 @@ public class LandingPage extends AppCompatActivity {
             case RESULT : {
                 switch (resultCode) {
                     case Config.SIGNUP_PATTERN : {
-                        startMainactivity();
-                        this.finish();
+                        initPush();
                     } break;
 
                     case Config.LOGIN_PATTERN : {
@@ -102,21 +119,29 @@ public class LandingPage extends AppCompatActivity {
 
             } break;
 
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+
+            } break;
+
             default: break;
         }
     }
 
     private void hidenSeek() {
-        editText.setVisibility(View.GONE);
+        editText.setVisibility(View.INVISIBLE);
 
-        signup.setVisibility(View.GONE);
+        signup.setVisibility(View.INVISIBLE);
 
         qrcode.setVisibility(View.VISIBLE);
 
         qrcode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //implement the qr code here
+                if (Build.VERSION.SDK_INT >= 23) {
+                    askPermission();
+                } else {
+                    scanQRcode();
+                }
             }
         });
     }
@@ -126,5 +151,79 @@ public class LandingPage extends AppCompatActivity {
         email = config.getEmailId();
         intent.putExtra("email", email);
         startActivity(intent);
+        this.finish();
+    }
+
+    private void initPush() {
+        startService(new Intent(getApplicationContext(), RegistrationIntentService.class));
+        startMainactivity();
+    }
+
+    private Intent addOns(Intent intent) {
+        intent.putExtra("titlecolor", "#433f5b");
+        intent.putExtra("statusbar", "#544e6b");
+        return intent;
+    }
+
+    private void askPermission() {
+        if (ContextCompat.checkSelfPermission(LandingPage.this,
+                Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(LandingPage.this,
+                    Manifest.permission.CAMERA)) {
+                Toast.makeText(LandingPage.this, "We need camera to scan QR code", Toast.LENGTH_LONG).show();
+            }
+            ActivityCompat.requestPermissions(LandingPage.this,
+                    new String[]{Manifest.permission.CAMERA},
+                    MY_PERMISSIONS_REQUEST_CAMERA);
+        } else {
+            scanQRcode();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    scanQRcode();
+                } else {
+                    Toast.makeText(getApplicationContext(), "We can't sync your device with browser without camera permision", Toast.LENGTH_LONG)
+                            .show();
+                }
+                break;
+            }
+            default:
+                break;
+
+        }
+    }
+
+    private void scanQRcode() {
+        MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
+                .withActivity(LandingPage.this)
+                .withEnableAutoFocus(true)
+                .withCenterTracker()
+                .withOnlyQRCodeScanning()
+                .withBleepEnabled(true)
+                .withBackfacingCamera()
+                .withText("Scanning...")
+                .withResultListener(new MaterialBarcodeScanner.OnResultListener() {
+                    @Override
+                    public void onResult(Barcode barcode) {
+                        if (TextUtils.isEmpty(barcode.rawValue)) {
+                            return;
+                        }
+                        Intent intent = new Intent(LandingPage.this, AuthScreen.class);
+                        intent.putExtra("email", email);
+                        intent.putExtra("resetKey", barcode.rawValue);
+                        startActivityForResult(addOns(intent), RESULT);
+                    }
+                })
+                .build();
+        materialBarcodeScanner.startScan();
     }
 }

@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "561327685590",
+    "project_id": "authme-158313"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:561327685590:android:e4f7e4960adc9336",
+        "android_client_info": {
+          "package_name": "io.authme"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr4zrhmXu6vTYUsbF4URlSY53j4PXSE0U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

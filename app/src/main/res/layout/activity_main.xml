@@ -112,7 +112,7 @@
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Movements"
+                android:text="Movements:"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
                 android:textSize="18sp"/>
