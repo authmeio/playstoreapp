@@ -3,7 +3,6 @@ package io.authme.home.gcm;
 import android.app.IntentService;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
@@ -72,7 +71,6 @@ public class RegistrationIntentService extends IntentService {
                     try {
                         JSONObject jsonObject = new JSONObject(response);
                         if (TextUtils.equals(jsonObject.getString("Status"), "200")) {
-                            initSecretPush();
                             app.setGCMToken(token);
                         }
                     } catch (JSONException e) {
@@ -85,31 +83,6 @@ public class RegistrationIntentService extends IntentService {
 
         }
 
-    }
-
-    public void initSecretPush() {
-        JSONObject gcmToken = new JSONObject();
-        try {
-            gcmToken.put("Email", config.getEmailId());
-            gcmToken.put("PackageName", getApplicationContext().getPackageName());
-            gcmToken.put("Platform", "android");
-            gcmToken.put("Provider", "gcm");
-            gcmToken.put("Otp", config.getOTP());
-
-        } catch (JSONException e) {
-
-        }
-
-        try {
-            new PostData(new Callback() {
-                @Override
-                public void onTaskExecuted(String response) {
-                    Log.d("Response", response);
-                }
-            },"k-50aa7bbe-d669-4cf3-b7f3-7272e9d9d926").runPost(config.getServerURL() + "otp/pushsecrets", gcmToken.toString());
-        } catch (IOException e) {
-
-        }
     }
 
 }
