@@ -44,7 +44,7 @@ public class LandingPage extends AppCompatActivity {
 
         app = new App(getApplicationContext());
 
-        config = new Config(LandingPage.this);
+        config = new Config(getApplicationContext());
 
         config.setEnvironment(Config.PRODUCTION);
 

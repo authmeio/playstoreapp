@@ -3,8 +3,10 @@ package io.authme.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +40,11 @@ public class MainActivity extends AppCompatActivity {
 
         trust = (RelativeLayout) this.findViewById(trustlayout);
 
-        config = new Config(MainActivity.this);
+        config = new Config(this.getApplicationContext());
 
+        if (TextUtils.isEmpty(config.getEmailId()) && email != null && email.length() > 5) {
+            config.setEmailId(email);
+        }
         button = (Button) this.findViewById(R.id.train);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -64,35 +69,42 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case RESULT : {
+            case RESULT: {
                 switch (resultCode) {
-                    case Config.SIGNUP_PATTERN : {
+                    case Config.SIGNUP_PATTERN: {
 
-                    } break;
+                    }
+                    break;
 
-                    case Config.LOGIN_PATTERN : {
+                    case Config.LOGIN_PATTERN: {
                         showScores(data.getStringExtra("response"));
-                    } break;
+                    }
+                    break;
 
                     case Config.RESET_PATTERN: {
 
-                    } break;
+                    }
+                    break;
 
-                    case Config.RESULT_FAILED : {
+                    case Config.RESULT_FAILED: {
                         Toast.makeText(getApplicationContext(), "Failed To Identify", Toast.LENGTH_LONG)
                                 .show();
                         if (data.hasExtra("response")) {
                             Toast.makeText(getApplicationContext(), data.getStringExtra("response"), Toast.LENGTH_LONG)
                                     .show();
                         }
-                    } break;
+                    }
+                    break;
 
-                    default: break;
+                    default:
+                        break;
                 }
 
-            } break;
+            }
+            break;
 
-            default: break;
+            default:
+                break;
 
         }
     }
@@ -100,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
     private void showScores(String response) {
         trust.setVisibility(View.VISIBLE);
 
+        RelativeLayout speedLayout = (RelativeLayout) this.findViewById(R.id.trustlayout);
         speed = (TextView) this.findViewById(R.id.speedscore);
 
         motion = (TextView) this.findViewById(R.id.motionscore);
@@ -114,6 +127,12 @@ public class MainActivity extends AppCompatActivity {
             motion.setText(jsonScore.getString("Motion") + "% match");
 
             signature.setText(jsonScore.getString("Path") + "% match");
+
+            if ("true".equalsIgnoreCase(jsonScore.getString("Accept"))) {
+                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorAccept));
+            } else {
+                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorReject));
+            }
 
         } catch (JSONException e) {
             e.printStackTrace();
