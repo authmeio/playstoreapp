@@ -54,7 +54,7 @@ public class GcmMessageHandler extends GcmListenerService {
             intent.setClassName(getApplicationContext(), AuthScreen.class.getCanonicalName());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("referenceId", orderId);
-            intent.putExtra("userId", config.getEmailId());
+            intent.putExtra("email", config.getEmailId());
             startActivity(intent);
         } else {
 
