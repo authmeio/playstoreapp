@@ -38,10 +38,6 @@ public class LandingPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
 
-        LandingPage.this.getSharedPreferences(Config.STORED_VALUES, 0).edit().clear().commit();
-
-        LandingPage.this.getSharedPreferences(App.APP_VALUES, 0).edit().clear().commit();
-
         app = new App(getApplicationContext());
 
         config = new Config(getApplicationContext());

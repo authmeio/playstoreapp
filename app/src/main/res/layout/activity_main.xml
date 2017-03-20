@@ -7,7 +7,6 @@
     tools:context="io.authme.home.MainActivity"
     android:animateLayoutChanges="true">
 
-
     <Button
         android:id="@+id/train"
         android:layout_width="match_parent"

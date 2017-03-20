@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             signature.setText(jsonScore.getString("Path") + "% match");
 
             if ("true".equalsIgnoreCase(jsonScore.getString("Accept"))) {
-                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorAccept));
+                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
             } else {
                 speedLayout.setBackgroundColor(getResources().getColor(R.color.colorReject));
             }
