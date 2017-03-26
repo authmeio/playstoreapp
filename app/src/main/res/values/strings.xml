@@ -2,6 +2,4 @@
     <string name="app_name">AuthMe</string>
     <string name="error_account_exists">Account with this email Id exists already.
         Please check your email and provide us a reset key and set a new pattern</string>
-    <string name="gcm_defaultSenderId">720738612328</string>
-    <string name="google_app_id">561327685590</string>
 </resources>

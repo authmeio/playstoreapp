@@ -18,8 +18,8 @@ import android.widget.Toast;
 import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScanner;
 import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerBuilder;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.google.firebase.iid.FirebaseInstanceId;
 
-import io.authme.home.gcm.RegistrationIntentService;
 import io.authme.sdk.AuthScreen;
 import io.authme.sdk.server.Config;
 
@@ -30,6 +30,7 @@ public class LandingPage extends AppCompatActivity {
     TextView error;
     String email;
     App app;
+    FirebaseInstanceId firebaseInstanceId;
 
     public final static int RESULT = 1, MY_PERMISSIONS_REQUEST_CAMERA = 2;
 
@@ -82,7 +83,7 @@ public class LandingPage extends AppCompatActivity {
             case RESULT: {
                 switch (resultCode) {
                     case Config.SIGNUP_PATTERN: {
-                        initPush();
+                        startMainactivity();
                     }
                     break;
 
@@ -148,16 +149,18 @@ public class LandingPage extends AppCompatActivity {
         Intent intent = new Intent(LandingPage.this, MainActivity.class);
         email = config.getEmailId();
         intent.putExtra("email", email);
+
+        if (TextUtils.isEmpty(app.getGCMToken())) {
+            firebaseInstanceId = FirebaseInstanceId.getInstance();
+            String token = firebaseInstanceId.getToken();
+            MyFirebaseInstanceIDService.sendRegistrationToServer(token, getApplicationContext());
+        }
+
         startActivity(intent);
         this.finish();
     }
 
-    private void initPush() {
-        startService(new Intent(getApplicationContext(), RegistrationIntentService.class));
-        startMainactivity();
-    }
-
-    private Intent addOns(Intent intent) {
+    public static final Intent addOns(Intent intent) {
         intent.putExtra("titlecolor", "#433f5b");
         intent.putExtra("statusbar", "#544e6b");
         return intent;
