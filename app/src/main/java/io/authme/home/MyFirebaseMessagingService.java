@@ -31,6 +31,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("referenceId", orderId);
                 intent.putExtra("email", config.getEmailId());
+                AuthmeEvents.logEvent(orderId, "ORDER_ACK", config.getEmailId(), config.getOTP());
                 startActivity(LandingPage.addOns(intent));
                 return;
             }
