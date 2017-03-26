@@ -19,6 +19,12 @@ public class App {
         editor = sharedPreferences.edit();
     }
 
+    /**
+     * Error:Execution failed for task ':app:clean'.
+     > Unable to delete directory: /media/artpar/ddrive/workspace/code/playstoreapp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/jars
+     * @param token
+     */
+
     public void setGCMToken(String token) {
         this.editor.putString(GCM, token);
         this.editor.apply();

@@ -200,18 +200,6 @@ public class LandingPage extends AppCompatActivity {
         }
     }
 
-    /**
-     * Error:FAILURE: Build failed with an exception.
-
-     * What went wrong:
-     Execution failed for task ':app:clean'.
-     > Unable to delete directory: /media/artpar/ddrive/workspace/code/playstoreapp/app/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/jars
-
-     * Try:
-     Run with --stacktrace option to get the stack trace. Run with --debug option to get more log output.
-
-     */
-
     private void scanQRcode() {
         MaterialBarcodeScanner materialBarcodeScanner = new MaterialBarcodeScannerBuilder()
                 .withActivity(LandingPage.this)

@@ -77,7 +77,7 @@ public class RegistrationIntentService extends IntentService {
                         e.printStackTrace();
                     }
                 }
-            }, "k-50aa7bbe-d669-4cf3-b7f3-7272e9d9d926").runPost(config.getServerURL() + "messengertoken/update", gcmToken.toString());
+            }, "k-862b77f3-5937-4856-af1b-8950a001f733").runPost(config.getServerURL() + "messengertoken/update", gcmToken.toString());
         } catch (IOException e) {
             e.printStackTrace();
 

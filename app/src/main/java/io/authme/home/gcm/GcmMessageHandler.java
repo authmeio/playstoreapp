@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.authme.home.App;
+import io.authme.home.AuthmeEvents;
 import io.authme.sdk.AuthScreen;
 import io.authme.sdk.server.Config;
 
@@ -54,10 +55,12 @@ public class GcmMessageHandler extends GcmListenerService {
             intent.setClassName(getApplicationContext(), AuthScreen.class.getCanonicalName());
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("referenceId", orderId);
+
+            AuthmeEvents.EventOrder(orderId, "ORDER_ACK", config.getEmailId(), config.getOTP(), config.getApiKey());
+
             intent.putExtra("email", config.getEmailId());
             startActivity(intent);
         } else {
-
         }
 
     }
