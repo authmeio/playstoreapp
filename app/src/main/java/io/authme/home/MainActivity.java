@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         config = new Config(this.getApplicationContext());
 
-        if (TextUtils.isEmpty(config.getEmailId()) && email != null && email.length() > 5) {
+        if (TextUtils.isEmpty(config.getEmailId())) {
             config.setEmailId(email);
         }
         button = (Button) this.findViewById(R.id.train);
