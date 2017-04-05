@@ -12,23 +12,27 @@ public class App {
     public static final String APP_VALUES = "APP_VALUES",
             GCM = "GCM";
     SharedPreferences sharedPreferences;
-    SharedPreferences.Editor editor;
-    public App (Context context) {
+
+    //    SharedPreferences.Editor editor;
+    public App(Context context) {
         this.context = context;
         sharedPreferences = this.context.getSharedPreferences(APP_VALUES, 0);
-        editor = sharedPreferences.edit();
+//        editor = sharedPreferences.edit();
     }
 
     /**
      * Error:Execution failed for task ':app:clean'.
-     > Unable to delete directory: /media/artpar/ddrive/workspace/code/playstoreapp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/jars
+     * > Unable to delete directory: /media/artpar/ddrive/workspace/code/playstoreapp/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/jars
+     *
      * @param token
      */
 
     public void setGCMToken(String token) {
-        this.editor.putString(GCM, token);
-        this.editor.apply();
-        this.editor.commit();
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        editor.putString(GCM, token);
+        editor.apply();
+        editor.commit();
     }
 
     public String getGCMToken() {
