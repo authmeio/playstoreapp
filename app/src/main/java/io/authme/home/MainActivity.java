@@ -4,6 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -13,8 +17,14 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
 import io.authme.sdk.AuthScreen;
+import io.authme.sdk.server.Callback;
 import io.authme.sdk.server.Config;
+import io.authme.sdk.server.PostData;
 
 import static io.authme.home.LandingPage.RESULT;
 import static io.authme.home.R.id.trustlayout;
@@ -29,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
     TextView signature, speed, motion;
 
     String email;
+    private int differentUserId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private List<UserLogin> getUserLoginList(String email) {
+
+        return new LinkedList<>();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
@@ -100,6 +116,26 @@ public class MainActivity extends AppCompatActivity {
                         break;
                 }
 
+
+                if (resultCode == Config.LOGIN_PATTERN || resultCode == Config.RESULT_FAILED) {
+                    if (this.differentUserId > 0) {
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("User", config.getEmailId());
+                            jsonObject.put("DifferentUser", this.differentUserId);
+
+                            new PostData(new Callback() {
+                                @Override
+                                public void onTaskExecuted(String s) {
+
+                                }
+                            }, Config.API_KEY).runPost(Config.PROD_SERVER_URL + "api/notmine", jsonObject.toString());
+                        } catch (JSONException | IOException e) {
+                            Log.e("AUTHMEIO", "Failed to mark as not mine", e);
+                        }
+                    }
+                }
+
             }
             break;
 
@@ -108,6 +144,40 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_activity_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+
+            case R.id.action_not_me:
+                this.differentUserId += 1;
+                return true;
+
+
+            case R.id.action_me:
+                this.differentUserId = 0;
+                return true;
+
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
 
     private void showScores(String response) {
 
