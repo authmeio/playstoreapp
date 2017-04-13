@@ -20,7 +20,13 @@ import com.edwardvanraak.materialbarcodescanner.MaterialBarcodeScannerBuilder;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.authme.home.history.PendingLogins;
 import io.authme.sdk.AuthScreen;
+import io.authme.sdk.server.Callback;
 import io.authme.sdk.server.Config;
 
 public class LandingPage extends AppCompatActivity {
@@ -45,36 +51,12 @@ public class LandingPage extends AppCompatActivity {
 
         config.setEnvironment(Config.PRODUCTION);
 
-        config.setAPIKey("k-862b77f3-5937-4856-af1b-8950a001f733");
+        //config.setAPIKey("k-c7f4a6b6-cd4b-4985-baa1-c18e74cb7d50");
 
-        if (!TextUtils.isEmpty(config.getEmailId())) {
-            LandingPage.this.finish();
-            startMainactivity();
-            return;
-        }
+        config.setAPIKey("k-50aa7bbe-d669-4cf3-b7f3-7272e9d9d926");
 
-        signup = (Button) this.findViewById(R.id.signup);
-        qrcode = (Button) this.findViewById(R.id.qrcode);
-        editText = (EditText) this.findViewById(R.id.emailId);
-        error = (TextView) this.findViewById(R.id.error);
-        signup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                email = editText.getText().toString().trim();
+        checkPendingLogins();
 
-                if (!Config.isValidEmail(email)) {
-                    Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_LONG)
-                            .show();
-                    return;
-                } else {
-                    Intent intent = new Intent(LandingPage.this, AuthScreen.class);
-
-                    intent.putExtra("email", email);
-
-                    startActivityForResult(addOns(intent), RESULT);
-                }
-            }
-        });
     }
 
     @Override
@@ -88,8 +70,19 @@ public class LandingPage extends AppCompatActivity {
                     break;
 
                     case Config.LOGIN_PATTERN: {
-                        Toast.makeText(getApplicationContext(), data.getStringExtra("response"), Toast.LENGTH_LONG)
-                                .show(); //you will get a trust score in the response here.
+                        try {
+                            JSONObject jsonObject = new JSONObject(data.getStringExtra("response"));
+                            if (jsonObject.getBoolean("Accept")) {
+                                startMainactivity();
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), "Incorrect Details", Toast.LENGTH_LONG)
+                                        .show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                     break;
 
@@ -226,5 +219,67 @@ public class LandingPage extends AppCompatActivity {
                 })
                 .build();
         materialBarcodeScanner.startScan();
+    }
+
+    private void checkPendingLogins() {
+        Callback callback = new Callback() {
+            @Override
+            public void onTaskExecuted(String s) {
+                try {
+                    JSONObject pendingObject = new JSONObject(s);
+                    if (TextUtils.equals(pendingObject.getString("Status"), "ok")) {
+                        JSONArray pendingArray = pendingObject.getJSONArray("Data");
+                        if (pendingArray.length() > 0) {
+                            Intent intent = new Intent(LandingPage.this, PendingLogins.class);
+                            intent.putExtra("pending", pendingArray.toString());
+                            startActivity(intent);
+                        }
+                        else {
+                            loadLandingPage();
+                        }
+                    }
+                    else {
+                        loadLandingPage();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        };
+
+        config.getPendingLogins(callback);
+    }
+
+    private void loadLandingPage() {
+
+        if (!TextUtils.isEmpty(config.getEmailId())) {
+            LandingPage.this.finish();
+            startMainactivity();
+            return;
+        }
+
+        signup = (Button) this.findViewById(R.id.signup);
+        qrcode = (Button) this.findViewById(R.id.qrcode);
+        editText = (EditText) this.findViewById(R.id.emailId);
+        error = (TextView) this.findViewById(R.id.error);
+        signup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                email = editText.getText().toString().trim();
+
+                if (!Config.isValidEmail(email)) {
+                    Toast.makeText(getApplicationContext(), "Invalid Email", Toast.LENGTH_LONG)
+                            .show();
+                    return;
+                } else {
+                    Intent intent = new Intent(LandingPage.this, AuthScreen.class);
+
+                    intent.putExtra("email", email);
+
+                    startActivityForResult(addOns(intent), RESULT);
+                }
+            }
+        });
     }
 }

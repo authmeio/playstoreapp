@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("email", email);
 
                 startActivityForResult(intent, RESULT);
+
             }
         });
     }
@@ -109,28 +110,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showScores(String response) {
-        trust.setVisibility(View.VISIBLE);
-
-        RelativeLayout speedLayout = (RelativeLayout) this.findViewById(R.id.trustlayout);
-        speed = (TextView) this.findViewById(R.id.speedscore);
-
-        motion = (TextView) this.findViewById(R.id.motionscore);
-
-        signature = (TextView) this.findViewById(R.id.signaturescore);
 
         try {
             JSONObject jsonScore = new JSONObject(response);
 
-            speed.setText(jsonScore.getString("Speed") + "% match");
+            if (jsonScore.has("Speed") && jsonScore.has("Motion") && jsonScore.has("Path")) {
 
-            motion.setText(jsonScore.getString("Motion") + "% match");
+                trust.setVisibility(View.VISIBLE);
 
-            signature.setText(jsonScore.getString("Path") + "% match");
+                RelativeLayout speedLayout = (RelativeLayout) this.findViewById(R.id.trustlayout);
 
-            if ("true".equalsIgnoreCase(jsonScore.getString("Accept"))) {
-                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-            } else {
-                speedLayout.setBackgroundColor(getResources().getColor(R.color.colorReject));
+                if (jsonScore.getBoolean("Accept")) {
+                    speedLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+                }
+                else {
+                    speedLayout.setBackgroundColor(getResources().getColor(R.color.colorReject));
+                }
+
+                speed = (TextView) this.findViewById(R.id.speedscore);
+
+                motion = (TextView) this.findViewById(R.id.motionscore);
+
+                signature = (TextView) this.findViewById(R.id.signaturescore);
+
+                speed.setText(jsonScore.getString("Speed") + "% match");
+
+                motion.setText(jsonScore.getString("Motion") + "% match");
+
+                signature.setText(jsonScore.getString("Path") + "% match");
+            }
+            
+            else if (jsonScore.has("Reason")) {
+                if (TextUtils.equals(jsonScore.getString("Reason"), "Pin Verification")) {
+                    Toast.makeText(getApplicationContext(), "Pin Verified",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
             }
 
         } catch (JSONException e) {
@@ -140,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
             trust.setVisibility(View.GONE);
             return;
         }
-
 
     }
 }
