@@ -51,11 +51,9 @@ public class LandingPage extends AppCompatActivity {
 
         config.setEnvironment(Config.PRODUCTION);
 
-        //config.setAPIKey("k-c7f4a6b6-cd4b-4985-baa1-c18e74cb7d50");
-
         config.setAPIKey("k-50aa7bbe-d669-4cf3-b7f3-7272e9d9d926");
 
-        checkPendingLogins();
+        loadLandingPage();
 
     }
 

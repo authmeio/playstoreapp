@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -18,8 +15,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 import io.authme.sdk.AuthScreen;
 import io.authme.sdk.server.Callback;
@@ -75,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private List<UserLogin> getUserLoginList(String email) {
-
-        return new LinkedList<>();
     }
 
     @Override
@@ -145,38 +135,38 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity_menu, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main_activity_menu, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
-
-
-            case R.id.action_not_me:
-                this.differentUserId += 1;
-                return true;
-
-
-            case R.id.action_me:
-                this.differentUserId = 0;
-                return true;
-
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+////            case R.id.action_settings:
+////                // User chose the "Settings" item, show the app settings UI...
+////                return true;
+////
+////
+////            case R.id.action_not_me:
+////                this.differentUserId += 1;
+////                return true;
+////
+////
+////            case R.id.action_me:
+////                this.differentUserId = 0;
+////                return true;
+////
+////
+////            default:
+////                // If we got here, the user's action was not recognized.
+////                // Invoke the superclass to handle it.
+////                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
 
 
     private void showScores(String response) {
@@ -211,8 +201,15 @@ public class MainActivity extends AppCompatActivity {
             }
             
             else if (jsonScore.has("Reason")) {
+                Log.d("Reason", jsonScore.getString("Reason"));
+
                 if (TextUtils.equals(jsonScore.getString("Reason"), "Pin Verification")) {
                     Toast.makeText(getApplicationContext(), "Pin Verified",
+                            Toast.LENGTH_LONG)
+                            .show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Swipe at least 5 times",
                             Toast.LENGTH_LONG)
                             .show();
                 }
